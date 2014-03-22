@@ -10,7 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import java.util.Random;
 
-import com.richardran.myandriodtest3.R;
+import com.richardran.passingclouds.R;
 
 
 public class MainSurface extends SurfaceView implements Runnable{
@@ -26,16 +26,10 @@ public class MainSurface extends SurfaceView implements Runnable{
    int timer = 0;
    int canvas_w = 0;
    int canvas_h = 0;
-   int horizon = 0;
-   int horizon1 = 0;
-   double rad2pix = 1;
-   int shift = 0;
-   int topshift = 0;
    
    StarrySky sky = new StarrySky();
    ScaledBitmapArray sb = new ScaledBitmapArray();
    
-  
    volatile boolean touched = false;
    volatile float touched_x, touched_y;
      
@@ -57,8 +51,9 @@ public class MainSurface extends SurfaceView implements Runnable{
 	   star.setColor(color);
 	   
 	   sky.create();
+	   //ran2d.onCreate(1000, 3000, 4000);
 	   
-	   Bitmap log = BitmapFactory.decodeResource(getResources(), R.drawable.lantern);
+	   Bitmap log = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 	   sb.setBitmap(log, 100, 1);
 	   
 	   running = true;
@@ -92,45 +87,26 @@ public class MainSurface extends SurfaceView implements Runnable{
 			   if(!ran2d.isCreated){
 				   canvas_w = canvas.getWidth();
 				   canvas_h = canvas.getHeight();
-				   rad2pix = 4* 0.667 * canvas_h/Math.PI; // this will ensure 2/3 as horizon
 				   
-				   horizon = (int)(0.667 * canvas_h);
-				   double yy = rad2pix*Math.atan(4000/100.1);  // slightly less than pi/2
-				   shift = (int)(0.667*canvas_h);
-				   horizon1 = (int)(-0.5 *yy+ 3 * horizon - shift);  // negative horizon, slightly bellow infinity
-				   
-				   topshift = (int)(0.02*canvas_h);
-				   ran2d.onCreate(1000, 3000, 4000);
+				   ran2d.onCreate(500, 3000, 4000);
 			   }
 			   
 			   //drawing background
-			   canvas.drawColor(Color.BLACK);
-			   if(timer%4==0) canvas.drawPath(sky.sky, star);
-			   else canvas.drawPath(sky.sky1, star);
+			   canvas.drawColor(Color.BLUE);
+			   //if(timer%4==0) canvas.drawPath(sky.sky, star);
+			   //else canvas.drawPath(sky.sky1, star);
 			   
-			   canvas.drawRect(0, horizon1, canvas_w, canvas_h, paintwater);
-			   
-			   for(int i = 0; i< ran2d.size; i++) {
-				   int x = ran2d.x[i];
-				   int y = ran2d.y[i]+timer;
-				   if(y>ran2d.ym) {
-					   y = y%ran2d.ym;
-				   }
-				   
-				   double yy = rad2pix*Math.atan(y/100.1);
-				   double r = 1;
-				   if(y<1) { r = yy/ 1.0; }
-				   else { r = yy/y; }
-				   double ty = yy+topshift;
-
-				   int sz = (int) ( 5*r);
-				   Bitmap b = sb.bmps.get(2*sz); 
-				   if(b==null) continue;
-				   canvas.drawBitmap(b, (float)(x*r), (float)ty-shift, null);
-				   double by = -0.5 *yy+ 3 * horizon;
-				   canvas.drawBitmap(b, (float)(x*r), (float)by-shift, null);
+			   int skyh = canvas_h/4;
+			   for(int i = 0;i<skyh-1;i++) {
+				   double light = 35/(double)(skyh);
+				   int reclen = skyh/35;
+				   int badj = (int)(light * i);
+				   int radj = (int)(light * i* 6);
+				   int color = Color.rgb(radj, radj, 220+badj);
+				   paintwater.setColor(color);
+				   canvas.drawRect(0, i, canvas_w, (i+1), paintwater);
 			   }
-			   
+			   ran2d.persRender(canvas, timer, canvas_h, 0.25);
 			   
 			   if(touched){  }
 

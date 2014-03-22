@@ -12,6 +12,7 @@ public class Ran2D {
 	public int size;
 	public int[] x;
 	public int[] y;
+	public int[] v;
 	public int xm;
 	public int ym;
 	
@@ -24,11 +25,13 @@ public class Ran2D {
 		
 		x = new int[size];
 		y = new int[size];
+		v = new int[size];
 		Random ran = new Random();
 		
 		for(int i = 0;i<size;i++){
 			x[i] = ran.nextInt(xm);
 			y[i] = ran.nextInt(ym);
+			v[i] = ran.nextInt(30);
 		}
 		
 		isCreated = true;
@@ -64,11 +67,12 @@ public class Ran2D {
 
 			   float left = (float)(x*r);
 			   float top = (float)(ty);
-			   int sz = (int) ( 5*r);
+			   int sz = (int) ( 20*r);
 			   
-			   int color = Color.rgb(255, 132, 0);
+			   int cloudc = 225 + this.v[i];
+			   int color = Color.rgb(cloudc, cloudc, cloudc);
 			   paint.setColor(color);
-			   canvas.drawRect(left, top, left+sz, top+sz, paint);
+			   canvas.drawRect(left, top, left+3*sz, top+sz, paint);
 			   /*
 			   // bitmap version
 			   int sz = (int) ( 5*r);

@@ -1,6 +1,6 @@
 package com.richardran.passingclouds;
 
-import com.richardran.myandriodtest3.R;
+import com.richardran.passingclouds.MainSurface;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,11 +13,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        
 		setContentView(R.layout.activity_main);
+		
 	    mySurfaceView = new MainSurface(this);
-	    
-	    setContentView(mySurfaceView);		        
+	    setContentView(mySurfaceView);		 
 	}
 
 	@Override
@@ -26,7 +25,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	   
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
