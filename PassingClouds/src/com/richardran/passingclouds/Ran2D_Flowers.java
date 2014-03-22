@@ -1,18 +1,22 @@
 package com.richardran.passingclouds;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 
-public class Ran2D {
+public class Ran2D_Flowers {
 	public boolean isCreated = false;
 	public int size;
 	public int[] x;
 	public int[] y;
 	public int[] v;
+	public int[] s;
 	public int xm;
 	public int ym;
 	
@@ -26,28 +30,27 @@ public class Ran2D {
 		x = new int[size];
 		y = new int[size];
 		v = new int[size];
+		s = new int[size];
+		
 		Random ran = new Random();
 		
 		for(int i = 0;i<size;i++){
-			x[i] = ran.nextInt(xm);
+			x[i] = ran.nextInt(xm)-100;
 			y[i] = ran.nextInt(ym);
 			v[i] = ran.nextInt(30);
+			s[i] = 10+ran.nextInt(5);
 		}
+		
+		Arrays.sort(v);
+		//Arrays.sort(y);
 		
 		isCreated = true;
 		ran = null;
 	}
 	
-	public int shift_y(int i, int shift) {
-		int ty = y[i] + shift;
-		if (ty>ym) ty = ty%ym;
-		
-		return ty;
-	}
-	
 	public void persRender(Canvas canvas, int timer, int canvas_h, double ratio) {
-		   double rad2pix = 3* ratio * canvas_h/Math.PI; // this will ensure 2/3 as horizon, but with twice coverage
-		   int shift = (int)(0.5 * rad2pix);
+		   double rad2pix = 8* ratio * canvas_h/Math.PI; // this will ensure 2/3 as horizon, but with twice coverage
+		   int shift = (int)(1.9* rad2pix);
 		   
 		   Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		   paint.setStyle(Paint.Style.FILL);
@@ -59,28 +62,26 @@ public class Ran2D {
 				   y = y%this.ym;
 			   }
 			   
-			   double yy = rad2pix*Math.atan(y/200.1);
+			   double yy = rad2pix*Math.atan((y)/200.1);
 			   double r = 1;
 			   if(y<1) { r = yy/ 1.0; }
 			   else { r = yy/y; }
-			   double ty = yy-shift;
+			   double ty = shift-yy;
 
-			   float left = (float)(x*r);
-			   float top = (float)(ty);
-			   int sz = (int) ( 40*r);
+			   double sz =  (5*r);
+			   if (sz<3) sz = 3;
 			   
-			   int cloudc = 225 + this.v[i];
-			   int color = Color.rgb(cloudc, cloudc, cloudc);
+			   int color = Color.rgb(255, 150, 0);
 			   paint.setColor(color);
-			   canvas.drawRect(left, top, left+3*sz, top+sz, paint);
-			   /*
-			   // bitmap version
-			   int sz = (int) ( 5*r);
-			   Bitmap b = sb.bmps.get(2*sz); 
-			   if(b==null) continue;
-			   canvas.drawBitmap(b, (float)(x*r), (float)ty-shift, null);
-			   */
-		   }		
+
+			   int isz = (int)(sz);
+			   RectF oval = new RectF();
+			   oval.left = x;
+			   oval.top = (float)ty;
+			   oval.right = x + 2*isz;
+			   oval.bottom = oval.top + isz;
+			   canvas.drawOval(oval, paint);
+		   }
 	}
 	
 }
